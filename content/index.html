@@ -1,0 +1,258 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Data Research.ipynb",
+      "provenance": [],
+      "authorship_tag": "ABX9TyMvN++VcFi6W4A2Ihu7sTsU",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "accelerator": "GPU"
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Koryun13/Plots-/blob/master/content/index.html\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "5591PLmaMXhy",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "import numpy as np\n",
+        "import pandas as pd \n",
+        "import matplotlib.pyplot as plt\n",
+        "import plotly \n",
+        "\n",
+        "\n"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "cZQ7JOlOP5xz",
+        "colab_type": "code",
+        "outputId": "8e713e7e-91ba-44d8-9287-031415eb828e",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 122
+        }
+      },
+      "source": [
+        "import os, sys\n",
+        "from google.colab import drive\n",
+        "drive.mount('/content/mnt')\n",
+        "nb_path = '/content/notebooks'\n",
+        "os.symlink('/content/mnt/My Drive/Colab Notebooks', nb_path)\n",
+        "sys.path.insert(0,nb_path)"
+      ],
+      "execution_count": 0,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Go to this URL in a browser: https://accounts.google.com/o/oauth2/auth?client_id=947318989803-6bn6qk8qdgf4n4g3pfee6491hc0brc4i.apps.googleusercontent.com&redirect_uri=urn%3aietf%3awg%3aoauth%3a2.0%3aoob&response_type=code&scope=email%20https%3a%2f%2fwww.googleapis.com%2fauth%2fdocs.test%20https%3a%2f%2fwww.googleapis.com%2fauth%2fdrive%20https%3a%2f%2fwww.googleapis.com%2fauth%2fdrive.photos.readonly%20https%3a%2f%2fwww.googleapis.com%2fauth%2fpeopleapi.readonly\n",
+            "\n",
+            "Enter your authorization code:\n",
+            "··········\n",
+            "Mounted at /content/mnt\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "zU_GE1lIRPFi",
+        "colab_type": "code",
+        "outputId": "f6c79fcd-3a72-4f84-f209-1225d23f17dc",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 241
+        }
+      },
+      "source": [
+        "!pip install --target=$nb_path chart_studio"
+      ],
+      "execution_count": 0,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Collecting chart_studio\n",
+            "  Using cached https://files.pythonhosted.org/packages/ca/ce/330794a6b6ca4b9182c38fc69dd2a9cbff60fd49421cb8648ee5fee352dc/chart_studio-1.1.0-py3-none-any.whl\n",
+            "Requirement already satisfied: six in /usr/local/lib/python3.6/dist-packages (from chart_studio) (1.12.0)\n",
+            "Requirement already satisfied: requests in /usr/local/lib/python3.6/dist-packages (from chart_studio) (2.21.0)\n",
+            "Requirement already satisfied: retrying>=1.3.3 in /usr/local/lib/python3.6/dist-packages (from chart_studio) (1.3.3)\n",
+            "Requirement already satisfied: plotly in /usr/local/lib/python3.6/dist-packages (from chart_studio) (4.4.1)\n",
+            "Requirement already satisfied: idna<2.9,>=2.5 in /usr/local/lib/python3.6/dist-packages (from requests->chart_studio) (2.8)\n",
+            "Requirement already satisfied: urllib3<1.25,>=1.21.1 in /usr/local/lib/python3.6/dist-packages (from requests->chart_studio) (1.24.3)\n",
+            "Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.6/dist-packages (from requests->chart_studio) (2020.4.5.1)\n",
+            "Requirement already satisfied: chardet<3.1.0,>=3.0.2 in /usr/local/lib/python3.6/dist-packages (from requests->chart_studio) (3.0.4)\n",
+            "Installing collected packages: chart-studio\n",
+            "Successfully installed chart-studio-1.1.0\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "4KVh8BrGR7nt",
+        "colab_type": "code",
+        "outputId": "2dced028-ed18-434f-acdb-88c24d1b824c",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 780
+        }
+      },
+      "source": [
+        "import chart_studio.plotly as py\n",
+        "import plotly.express as px\n",
+        "\n",
+        "gapminder = px.data.gapminder()\n",
+        "print(gapminder)\n",
+        "fig = px.scatter(gapminder.query(\"year==1952\"), x=\"gdpPercap\", y=\"lifeExp\", size=\"pop\", color=\"continent\",\n",
+        "           hover_name=\"country\", log_x=True, size_max=60)\n",
+        "fig.show()"
+      ],
+      "execution_count": 0,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "          country continent  year  ...   gdpPercap  iso_alpha  iso_num\n",
+            "0     Afghanistan      Asia  1952  ...  779.445314        AFG        4\n",
+            "1     Afghanistan      Asia  1957  ...  820.853030        AFG        4\n",
+            "2     Afghanistan      Asia  1962  ...  853.100710        AFG        4\n",
+            "3     Afghanistan      Asia  1967  ...  836.197138        AFG        4\n",
+            "4     Afghanistan      Asia  1972  ...  739.981106        AFG        4\n",
+            "...           ...       ...   ...  ...         ...        ...      ...\n",
+            "1699     Zimbabwe    Africa  1987  ...  706.157306        ZWE      716\n",
+            "1700     Zimbabwe    Africa  1992  ...  693.420786        ZWE      716\n",
+            "1701     Zimbabwe    Africa  1997  ...  792.449960        ZWE      716\n",
+            "1702     Zimbabwe    Africa  2002  ...  672.038623        ZWE      716\n",
+            "1703     Zimbabwe    Africa  2007  ...  469.709298        ZWE      716\n",
+            "\n",
+            "[1704 rows x 8 columns]\n"
+          ],
+          "name": "stdout"
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/html": [
+              "<html>\n",
+              "<head><meta charset=\"utf-8\" /></head>\n",
+              "<body>\n",
+              "    <div>\n",
+              "            <script src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG\"></script><script type=\"text/javascript\">if (window.MathJax) {MathJax.Hub.Config({SVG: {font: \"STIX-Web\"}});}</script>\n",
+              "                <script type=\"text/javascript\">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>\n",
+              "        <script src=\"https://cdn.plot.ly/plotly-latest.min.js\"></script>    \n",
+              "            <div id=\"2b295bde-5e50-44a9-918a-8453d5021bf1\" class=\"plotly-graph-div\" style=\"height:525px; width:100%;\"></div>\n",
+              "            <script type=\"text/javascript\">\n",
+              "                \n",
+              "                    window.PLOTLYENV=window.PLOTLYENV || {};\n",
+              "                    \n",
+              "                if (document.getElementById(\"2b295bde-5e50-44a9-918a-8453d5021bf1\")) {\n",
+              "                    Plotly.newPlot(\n",
+              "                        '2b295bde-5e50-44a9-918a-8453d5021bf1',\n",
+              "                        [{\"hoverlabel\": {\"namelength\": 0}, \"hovertemplate\": \"<b>%{hovertext}</b><br><br>continent=Asia<br>gdpPercap=%{x}<br>lifeExp=%{y}<br>pop=%{marker.size}\", \"hovertext\": [\"Afghanistan\", \"Bahrain\", \"Bangladesh\", \"Cambodia\", \"China\", \"Hong Kong, China\", \"India\", \"Indonesia\", \"Iran\", \"Iraq\", \"Israel\", \"Japan\", \"Jordan\", \"Korea, Dem. Rep.\", \"Korea, Rep.\", \"Kuwait\", \"Lebanon\", \"Malaysia\", \"Mongolia\", \"Myanmar\", \"Nepal\", \"Oman\", \"Pakistan\", \"Philippines\", \"Saudi Arabia\", \"Singapore\", \"Sri Lanka\", \"Syria\", \"Taiwan\", \"Thailand\", \"Vietnam\", \"West Bank and Gaza\", \"Yemen, Rep.\"], \"legendgroup\": \"continent=Asia\", \"marker\": {\"color\": \"#636efa\", \"size\": [8425333, 120447, 46886859, 4693836, 556263527, 2125900, 372000000, 82052000, 17272000, 5441766, 1620914, 86459025, 607914, 8865488, 20947571, 160000, 1439529, 6748378, 800663, 20092996, 9182536, 507833, 41346560, 22438691, 4005677, 1127000, 7982342, 3661549, 8550362, 21289402, 26246839, 1030585, 4963829], \"sizemode\": \"area\", \"sizeref\": 154517.64638888888, \"symbol\": \"circle\"}, \"mode\": \"markers\", \"name\": \"continent=Asia\", \"showlegend\": true, \"type\": \"scatter\", \"x\": [779.4453145, 9867.084765000001, 684.2441716, 368.46928560000003, 400.44861099999997, 3054.421209, 546.5657493, 749.6816546, 3035.326002, 4129.766056, 4086.522128, 3216.956347, 1546.907807, 1088.277758, 1030.592226, 108382.3529, 4834.804067, 1831.132894, 786.5668575, 331.0, 545.8657228999999, 1828.230307, 684.5971437999999, 1272.880995, 6459.5548229999995, 2315.138227, 1083.53203, 1643.485354, 1206.947913, 757.7974177, 605.0664917, 1515.5923289999998, 781.7175761], \"xaxis\": \"x\", \"y\": [28.801, 50.93899999999999, 37.484, 39.417, 44.0, 60.96, 37.373000000000005, 37.468, 44.869, 45.32, 65.39, 63.03, 43.158, 50.056000000000004, 47.453, 55.565, 55.928000000000004, 48.463, 42.244, 36.319, 36.157, 37.578, 43.43600000000001, 47.751999999999995, 39.875, 60.396, 57.593, 45.883, 58.5, 50.848, 40.412, 43.16, 32.548], \"yaxis\": \"y\"}, {\"hoverlabel\": {\"namelength\": 0}, \"hovertemplate\": \"<b>%{hovertext}</b><br><br>continent=Europe<br>gdpPercap=%{x}<br>lifeExp=%{y}<br>pop=%{marker.size}\", \"hovertext\": [\"Albania\", \"Austria\", \"Belgium\", \"Bosnia and Herzegovina\", \"Bulgaria\", \"Croatia\", \"Czech Republic\", \"Denmark\", \"Finland\", \"France\", \"Germany\", \"Greece\", \"Hungary\", \"Iceland\", \"Ireland\", \"Italy\", \"Montenegro\", \"Netherlands\", \"Norway\", \"Poland\", \"Portugal\", \"Romania\", \"Serbia\", \"Slovak Republic\", \"Slovenia\", \"Spain\", \"Sweden\", \"Switzerland\", \"Turkey\", \"United Kingdom\"], \"legendgroup\": \"continent=Europe\", \"marker\": {\"color\": \"#EF553B\", \"size\": [1282697, 6927772, 8730405, 2791000, 7274900, 3882229, 9125183, 4334000, 4090500, 42459667, 69145952, 7733250, 9504000, 147962, 2952156, 47666000, 413834, 10381988, 3327728, 25730551, 8526050, 16630000, 6860147, 3558137, 1489518, 28549870, 7124673, 4815000, 22235677, 50430000], \"sizemode\": \"area\", \"sizeref\": 154517.64638888888, \"symbol\": \"circle\"}, \"mode\": \"markers\", \"name\": \"continent=Europe\", \"showlegend\": true, \"type\": \"scatter\", \"x\": [1601.056136, 6137.076492, 8343.105126999999, 973.5331947999999, 2444.2866480000002, 3119.23652, 6876.14025, 9692.385245, 6424.519071, 7029.809327, 7144.114393000001, 3530.690067, 5263.6738159999995, 7267.688428, 5210.280328, 4931.404154999999, 2647.585601, 8941.571858, 10095.42172, 4029.3296990000003, 3068.319867, 3144.613186, 3581.4594479999996, 5074.659104, 4215.041741, 3834.0347420000003, 8527.844662000001, 14734.23275, 1969.1009800000002, 9979.508487000001], \"xaxis\": \"x\", \"y\": [55.23, 66.8, 68.0, 53.82, 59.6, 61.21, 66.87, 70.78, 66.55, 67.41, 67.5, 65.86, 64.03, 72.49, 66.91, 65.94, 59.163999999999994, 72.13, 72.67, 61.31, 59.82, 61.05, 57.996, 64.36, 65.57, 64.94, 71.86, 69.62, 43.585, 69.18], \"yaxis\": \"y\"}, {\"hoverlabel\": {\"namelength\": 0}, \"hovertemplate\": \"<b>%{hovertext}</b><br><br>continent=Africa<br>gdpPercap=%{x}<br>lifeExp=%{y}<br>pop=%{marker.size}\", \"hovertext\": [\"Algeria\", \"Angola\", \"Benin\", \"Botswana\", \"Burkina Faso\", \"Burundi\", \"Cameroon\", \"Central African Republic\", \"Chad\", \"Comoros\", \"Congo, Dem. Rep.\", \"Congo, Rep.\", \"Cote d'Ivoire\", \"Djibouti\", \"Egypt\", \"Equatorial Guinea\", \"Eritrea\", \"Ethiopia\", \"Gabon\", \"Gambia\", \"Ghana\", \"Guinea\", \"Guinea-Bissau\", \"Kenya\", \"Lesotho\", \"Liberia\", \"Libya\", \"Madagascar\", \"Malawi\", \"Mali\", \"Mauritania\", \"Mauritius\", \"Morocco\", \"Mozambique\", \"Namibia\", \"Niger\", \"Nigeria\", \"Reunion\", \"Rwanda\", \"Sao Tome and Principe\", \"Senegal\", \"Sierra Leone\", \"Somalia\", \"South Africa\", \"Sudan\", \"Swaziland\", \"Tanzania\", \"Togo\", \"Tunisia\", \"Uganda\", \"Zambia\", \"Zimbabwe\"], \"legendgroup\": \"continent=Africa\", \"marker\": {\"color\": \"#00cc96\", \"size\": [9279525, 4232095, 1738315, 442308, 4469979, 2445618, 5009067, 1291695, 2682462, 153936, 14100005, 854885, 2977019, 63149, 22223309, 216964, 1438760, 20860941, 420702, 284320, 5581001, 2664249, 580653, 6464046, 748747, 863308, 1019729, 4762912, 2917802, 3838168, 1022556, 516556, 9939217, 6446316, 485831, 3379468, 33119096, 257700, 2534927, 60011, 2755589, 2143249, 2526994, 14264935, 8504667, 290243, 8322925, 1219113, 3647735, 5824797, 2672000, 3080907], \"sizemode\": \"area\", \"sizeref\": 154517.64638888888, \"symbol\": \"circle\"}, \"mode\": \"markers\", \"name\": \"continent=Africa\", \"showlegend\": true, \"type\": \"scatter\", \"x\": [2449.008185, 3520.610273, 1062.7522, 851.2411407, 543.2552413, 339.29645869999996, 1172.667655, 1071.310713, 1178.665927, 1102.990936, 780.5423257, 2125.621418, 1388.594732, 2669.529475, 1418.822445, 375.6431231, 328.94055710000004, 362.1462796, 4293.476475, 485.2306591, 911.2989371, 510.19649230000005, 299.850319, 853.5409189999999, 298.8462121, 575.5729961000001, 2387.54806, 1443.011715, 369.1650802, 452.3369807, 743.1159097, 1967.955707, 1688.20357, 468.5260381, 2423.780443, 761.879376, 1077.281856, 2718.885295, 493.32387520000003, 879.5835855, 1450.356983, 879.7877358, 1135.749842, 4725.295531000001, 1615.991129, 1148.376626, 716.6500721, 859.8086567, 1468.475631, 734.753484, 1147.388831, 406.8841148], \"xaxis\": \"x\", \"y\": [43.077, 30.015, 38.223, 47.622, 31.975, 39.031, 38.523, 35.463, 38.092, 40.715, 39.143, 42.111000000000004, 40.477, 34.812, 41.893, 34.482, 35.928000000000004, 34.078, 37.003, 30.0, 43.148999999999994, 33.609, 32.5, 42.27, 42.138000000000005, 38.48, 42.723, 36.681, 36.256, 33.685, 40.543, 50.986000000000004, 42.873000000000005, 31.285999999999998, 41.725, 37.444, 36.324, 52.724, 40.0, 46.471000000000004, 37.278, 30.331, 32.978, 45.00899999999999, 38.635, 41.407, 41.215, 38.596, 44.6, 39.978, 42.038000000000004, 48.451], \"yaxis\": \"y\"}, {\"hoverlabel\": {\"namelength\": 0}, \"hovertemplate\": \"<b>%{hovertext}</b><br><br>continent=Americas<br>gdpPercap=%{x}<br>lifeExp=%{y}<br>pop=%{marker.size}\", \"hovertext\": [\"Argentina\", \"Bolivia\", \"Brazil\", \"Canada\", \"Chile\", \"Colombia\", \"Costa Rica\", \"Cuba\", \"Dominican Republic\", \"Ecuador\", \"El Salvador\", \"Guatemala\", \"Haiti\", \"Honduras\", \"Jamaica\", \"Mexico\", \"Nicaragua\", \"Panama\", \"Paraguay\", \"Peru\", \"Puerto Rico\", \"Trinidad and Tobago\", \"United States\", \"Uruguay\", \"Venezuela\"], \"legendgroup\": \"continent=Americas\", \"marker\": {\"color\": \"#ab63fa\", \"size\": [17876956, 2883315, 56602560, 14785584, 6377619, 12350771, 926317, 6007797, 2491346, 3548753, 2042865, 3146381, 3201488, 1517453, 1426095, 30144317, 1165790, 940080, 1555876, 8025700, 2227000, 662850, 157553000, 2252965, 5439568], \"sizemode\": \"area\", \"sizeref\": 154517.64638888888, \"symbol\": \"circle\"}, \"mode\": \"markers\", \"name\": \"continent=Americas\", \"showlegend\": true, \"type\": \"scatter\", \"x\": [5911.315053, 2677.3263469999997, 2108.944355, 11367.16112, 3939.9787890000002, 2144.115096, 2627.0094710000003, 5586.53878, 1397.7171369999999, 3522.110717, 3048.3029, 2428.2377690000003, 1840.366939, 2194.926204, 2898.5308809999997, 3478.125529, 3112.363948, 2480.380334, 1952.3087010000002, 3758.523437, 3081.959785, 3023.271928, 13990.482080000002, 5716.766744, 7689.799761], \"xaxis\": \"x\", \"y\": [62.485, 40.414, 50.917, 68.75, 54.745, 50.643, 57.206, 59.42100000000001, 45.928000000000004, 48.357, 45.262, 42.023, 37.579, 41.912, 58.53, 50.788999999999994, 42.31399999999999, 55.191, 62.648999999999994, 43.902, 64.28, 59.1, 68.44, 66.071, 55.088], \"yaxis\": \"y\"}, {\"hoverlabel\": {\"namelength\": 0}, \"hovertemplate\": \"<b>%{hovertext}</b><br><br>continent=Oceania<br>gdpPercap=%{x}<br>lifeExp=%{y}<br>pop=%{marker.size}\", \"hovertext\": [\"Australia\", \"New Zealand\"], \"legendgroup\": \"continent=Oceania\", \"marker\": {\"color\": \"#FFA15A\", \"size\": [8691212, 1994794], \"sizemode\": \"area\", \"sizeref\": 154517.64638888888, \"symbol\": \"circle\"}, \"mode\": \"markers\", \"name\": \"continent=Oceania\", \"showlegend\": true, \"type\": \"scatter\", \"x\": [10039.595640000001, 10556.575659999999], \"xaxis\": \"x\", \"y\": [69.12, 69.39], \"yaxis\": \"y\"}],\n",
+              "                        {\"legend\": {\"itemsizing\": \"constant\", \"tracegroupgap\": 0}, \"margin\": {\"t\": 60}, \"template\": {\"data\": {\"bar\": [{\"error_x\": {\"color\": \"#2a3f5f\"}, \"error_y\": {\"color\": \"#2a3f5f\"}, \"marker\": {\"line\": {\"color\": \"#E5ECF6\", \"width\": 0.5}}, \"type\": \"bar\"}], \"barpolar\": [{\"marker\": {\"line\": {\"color\": \"#E5ECF6\", \"width\": 0.5}}, \"type\": \"barpolar\"}], \"carpet\": [{\"aaxis\": {\"endlinecolor\": \"#2a3f5f\", \"gridcolor\": \"white\", \"linecolor\": \"white\", \"minorgridcolor\": \"white\", \"startlinecolor\": \"#2a3f5f\"}, \"baxis\": {\"endlinecolor\": \"#2a3f5f\", \"gridcolor\": \"white\", \"linecolor\": \"white\", \"minorgridcolor\": \"white\", \"startlinecolor\": \"#2a3f5f\"}, \"type\": \"carpet\"}], \"choropleth\": [{\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}, \"type\": \"choropleth\"}], \"contour\": [{\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}, \"colorscale\": [[0.0, \"#0d0887\"], [0.1111111111111111, \"#46039f\"], [0.2222222222222222, \"#7201a8\"], [0.3333333333333333, \"#9c179e\"], [0.4444444444444444, \"#bd3786\"], [0.5555555555555556, \"#d8576b\"], [0.6666666666666666, \"#ed7953\"], [0.7777777777777778, \"#fb9f3a\"], [0.8888888888888888, \"#fdca26\"], [1.0, \"#f0f921\"]], \"type\": \"contour\"}], \"contourcarpet\": [{\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}, \"type\": \"contourcarpet\"}], \"heatmap\": [{\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}, \"colorscale\": [[0.0, \"#0d0887\"], [0.1111111111111111, \"#46039f\"], [0.2222222222222222, \"#7201a8\"], [0.3333333333333333, \"#9c179e\"], [0.4444444444444444, \"#bd3786\"], [0.5555555555555556, \"#d8576b\"], [0.6666666666666666, \"#ed7953\"], [0.7777777777777778, \"#fb9f3a\"], [0.8888888888888888, \"#fdca26\"], [1.0, \"#f0f921\"]], \"type\": \"heatmap\"}], \"heatmapgl\": [{\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}, \"colorscale\": [[0.0, \"#0d0887\"], [0.1111111111111111, \"#46039f\"], [0.2222222222222222, \"#7201a8\"], [0.3333333333333333, \"#9c179e\"], [0.4444444444444444, \"#bd3786\"], [0.5555555555555556, \"#d8576b\"], [0.6666666666666666, \"#ed7953\"], [0.7777777777777778, \"#fb9f3a\"], [0.8888888888888888, \"#fdca26\"], [1.0, \"#f0f921\"]], \"type\": \"heatmapgl\"}], \"histogram\": [{\"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"histogram\"}], \"histogram2d\": [{\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}, \"colorscale\": [[0.0, \"#0d0887\"], [0.1111111111111111, \"#46039f\"], [0.2222222222222222, \"#7201a8\"], [0.3333333333333333, \"#9c179e\"], [0.4444444444444444, \"#bd3786\"], [0.5555555555555556, \"#d8576b\"], [0.6666666666666666, \"#ed7953\"], [0.7777777777777778, \"#fb9f3a\"], [0.8888888888888888, \"#fdca26\"], [1.0, \"#f0f921\"]], \"type\": \"histogram2d\"}], \"histogram2dcontour\": [{\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}, \"colorscale\": [[0.0, \"#0d0887\"], [0.1111111111111111, \"#46039f\"], [0.2222222222222222, \"#7201a8\"], [0.3333333333333333, \"#9c179e\"], [0.4444444444444444, \"#bd3786\"], [0.5555555555555556, \"#d8576b\"], [0.6666666666666666, \"#ed7953\"], [0.7777777777777778, \"#fb9f3a\"], [0.8888888888888888, \"#fdca26\"], [1.0, \"#f0f921\"]], \"type\": \"histogram2dcontour\"}], \"mesh3d\": [{\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}, \"type\": \"mesh3d\"}], \"parcoords\": [{\"line\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"parcoords\"}], \"pie\": [{\"automargin\": true, \"type\": \"pie\"}], \"scatter\": [{\"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"scatter\"}], \"scatter3d\": [{\"line\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"scatter3d\"}], \"scattercarpet\": [{\"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"scattercarpet\"}], \"scattergeo\": [{\"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"scattergeo\"}], \"scattergl\": [{\"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"scattergl\"}], \"scattermapbox\": [{\"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"scattermapbox\"}], \"scatterpolar\": [{\"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"scatterpolar\"}], \"scatterpolargl\": [{\"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"scatterpolargl\"}], \"scatterternary\": [{\"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"scatterternary\"}], \"surface\": [{\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}, \"colorscale\": [[0.0, \"#0d0887\"], [0.1111111111111111, \"#46039f\"], [0.2222222222222222, \"#7201a8\"], [0.3333333333333333, \"#9c179e\"], [0.4444444444444444, \"#bd3786\"], [0.5555555555555556, \"#d8576b\"], [0.6666666666666666, \"#ed7953\"], [0.7777777777777778, \"#fb9f3a\"], [0.8888888888888888, \"#fdca26\"], [1.0, \"#f0f921\"]], \"type\": \"surface\"}], \"table\": [{\"cells\": {\"fill\": {\"color\": \"#EBF0F8\"}, \"line\": {\"color\": \"white\"}}, \"header\": {\"fill\": {\"color\": \"#C8D4E3\"}, \"line\": {\"color\": \"white\"}}, \"type\": \"table\"}]}, \"layout\": {\"annotationdefaults\": {\"arrowcolor\": \"#2a3f5f\", \"arrowhead\": 0, \"arrowwidth\": 1}, \"coloraxis\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"colorscale\": {\"diverging\": [[0, \"#8e0152\"], [0.1, \"#c51b7d\"], [0.2, \"#de77ae\"], [0.3, \"#f1b6da\"], [0.4, \"#fde0ef\"], [0.5, \"#f7f7f7\"], [0.6, \"#e6f5d0\"], [0.7, \"#b8e186\"], [0.8, \"#7fbc41\"], [0.9, \"#4d9221\"], [1, \"#276419\"]], \"sequential\": [[0.0, \"#0d0887\"], [0.1111111111111111, \"#46039f\"], [0.2222222222222222, \"#7201a8\"], [0.3333333333333333, \"#9c179e\"], [0.4444444444444444, \"#bd3786\"], [0.5555555555555556, \"#d8576b\"], [0.6666666666666666, \"#ed7953\"], [0.7777777777777778, \"#fb9f3a\"], [0.8888888888888888, \"#fdca26\"], [1.0, \"#f0f921\"]], \"sequentialminus\": [[0.0, \"#0d0887\"], [0.1111111111111111, \"#46039f\"], [0.2222222222222222, \"#7201a8\"], [0.3333333333333333, \"#9c179e\"], [0.4444444444444444, \"#bd3786\"], [0.5555555555555556, \"#d8576b\"], [0.6666666666666666, \"#ed7953\"], [0.7777777777777778, \"#fb9f3a\"], [0.8888888888888888, \"#fdca26\"], [1.0, \"#f0f921\"]]}, \"colorway\": [\"#636efa\", \"#EF553B\", \"#00cc96\", \"#ab63fa\", \"#FFA15A\", \"#19d3f3\", \"#FF6692\", \"#B6E880\", \"#FF97FF\", \"#FECB52\"], \"font\": {\"color\": \"#2a3f5f\"}, \"geo\": {\"bgcolor\": \"white\", \"lakecolor\": \"white\", \"landcolor\": \"#E5ECF6\", \"showlakes\": true, \"showland\": true, \"subunitcolor\": \"white\"}, \"hoverlabel\": {\"align\": \"left\"}, \"hovermode\": \"closest\", \"mapbox\": {\"style\": \"light\"}, \"paper_bgcolor\": \"white\", \"plot_bgcolor\": \"#E5ECF6\", \"polar\": {\"angularaxis\": {\"gridcolor\": \"white\", \"linecolor\": \"white\", \"ticks\": \"\"}, \"bgcolor\": \"#E5ECF6\", \"radialaxis\": {\"gridcolor\": \"white\", \"linecolor\": \"white\", \"ticks\": \"\"}}, \"scene\": {\"xaxis\": {\"backgroundcolor\": \"#E5ECF6\", \"gridcolor\": \"white\", \"gridwidth\": 2, \"linecolor\": \"white\", \"showbackground\": true, \"ticks\": \"\", \"zerolinecolor\": \"white\"}, \"yaxis\": {\"backgroundcolor\": \"#E5ECF6\", \"gridcolor\": \"white\", \"gridwidth\": 2, \"linecolor\": \"white\", \"showbackground\": true, \"ticks\": \"\", \"zerolinecolor\": \"white\"}, \"zaxis\": {\"backgroundcolor\": \"#E5ECF6\", \"gridcolor\": \"white\", \"gridwidth\": 2, \"linecolor\": \"white\", \"showbackground\": true, \"ticks\": \"\", \"zerolinecolor\": \"white\"}}, \"shapedefaults\": {\"line\": {\"color\": \"#2a3f5f\"}}, \"ternary\": {\"aaxis\": {\"gridcolor\": \"white\", \"linecolor\": \"white\", \"ticks\": \"\"}, \"baxis\": {\"gridcolor\": \"white\", \"linecolor\": \"white\", \"ticks\": \"\"}, \"bgcolor\": \"#E5ECF6\", \"caxis\": {\"gridcolor\": \"white\", \"linecolor\": \"white\", \"ticks\": \"\"}}, \"title\": {\"x\": 0.05}, \"xaxis\": {\"automargin\": true, \"gridcolor\": \"white\", \"linecolor\": \"white\", \"ticks\": \"\", \"title\": {\"standoff\": 15}, \"zerolinecolor\": \"white\", \"zerolinewidth\": 2}, \"yaxis\": {\"automargin\": true, \"gridcolor\": \"white\", \"linecolor\": \"white\", \"ticks\": \"\", \"title\": {\"standoff\": 15}, \"zerolinecolor\": \"white\", \"zerolinewidth\": 2}}}, \"xaxis\": {\"anchor\": \"y\", \"domain\": [0.0, 1.0], \"title\": {\"text\": \"gdpPercap\"}, \"type\": \"log\"}, \"yaxis\": {\"anchor\": \"x\", \"domain\": [0.0, 1.0], \"title\": {\"text\": \"lifeExp\"}}},\n",
+              "                        {\"responsive\": true}\n",
+              "                    ).then(function(){\n",
+              "                            \n",
+              "var gd = document.getElementById('2b295bde-5e50-44a9-918a-8453d5021bf1');\n",
+              "var x = new MutationObserver(function (mutations, observer) {{\n",
+              "        var display = window.getComputedStyle(gd).display;\n",
+              "        if (!display || display === 'none') {{\n",
+              "            console.log([gd, 'removed!']);\n",
+              "            Plotly.purge(gd);\n",
+              "            observer.disconnect();\n",
+              "        }}\n",
+              "}});\n",
+              "\n",
+              "// Listen for the removal of the full notebook cells\n",
+              "var notebookContainer = gd.closest('#notebook-container');\n",
+              "if (notebookContainer) {{\n",
+              "    x.observe(notebookContainer, {childList: true});\n",
+              "}}\n",
+              "\n",
+              "// Listen for the clearing of the current output cell\n",
+              "var outputEl = gd.closest('.output');\n",
+              "if (outputEl) {{\n",
+              "    x.observe(outputEl, {childList: true});\n",
+              "}}\n",
+              "\n",
+              "                        })\n",
+              "                };\n",
+              "                \n",
+              "            </script>\n",
+              "        </div>\n",
+              "</body>\n",
+              "</html>"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          }
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "cMP1ynMQTqyq",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "import plotly.io as pio\n",
+        "pio.write_html(fig, file='index.html', auto_open=True)"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "bqyrYWwtj-72",
+        "colab_type": "text"
+      },
+      "source": [
+        ""
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "IJCDF02RUlEx",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        ""
+      ],
+      "execution_count": 0,
+      "outputs": []
+    }
+  ]
+}
